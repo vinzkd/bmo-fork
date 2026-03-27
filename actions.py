@@ -31,8 +31,14 @@ class ActionHandler:
             case "shake_head":
                 self.send_command("shake_head", arduino)
             case "take_picture":
-                device = re.findall(r'"([^"]+)" \(video\)', run('ffmpeg -list_devices true -f dshow -i dummy', shell=True, text=True, capture_output=True).stderr)[0]
-                run(f'ffmpeg -f dshow -i video="{device}" -frames:v 1 ./pictures/photo.jpg')
+                ## For Windows
+                #device = re.findall(r'"([^"]+)" \(video\)', run('ffmpeg -list_devices true -f dshow -i dummy', shell=True, text=True, capture_output=True).stderr)[0]
+                #run(f'ffmpeg -f dshow -i video="{device}" -frames:v 1 ./pictures/photo.jpg')
+
+                ## For Linux
+                device = "/dev/video0"
+                run(f'ffmpeg -f video4linux2 -i {device} -frames:v 1 ./pictures/photo.jpg -y', shell=True)
+
                 sleep(2)
                 with open("./pictures/photo.jpg", "rb") as img_file:
                     file = client.files.create(
