@@ -76,14 +76,15 @@ class ChatBot:
             action_response = self.action_handler.handle(response[0], message, arduino, self.client)
             response = action_response or response[1]
             print(response) if action_response else ""
-        if audio:
-            self.stream.feed(response)
-            self.stream.play_async()
+        #if audio:
+        #    self.stream.feed(response)
+        #    self.stream.play_async()
 
 if __name__ == "__main__":
     import serial
-    # arduino = serial.Serial(port="/dev/ttyACM0", baudrate=9600, timeout=1)
+    arduino = serial.Serial(port="/dev/ttyACM0", baudrate=9600, timeout=1)
     bot = ChatBot()
+    print(arduino)
     while True:
         message = input("You: ")
-        bot.send_message(message, audio=True)
+        bot.send_message(message, audio=True, arduino=arduino)
