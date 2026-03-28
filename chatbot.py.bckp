@@ -1,5 +1,6 @@
 from actions import ActionHandler
 import os
+from RealtimeTTS import TextToAudioStream,  GTTSEngine, GTTSVoice, SystemEngine, SystemVoice, OpenAIEngine, OpenAIVoice
 from openai import OpenAI
 from datetime import datetime
 import re
@@ -12,7 +13,7 @@ class ChatBot:
         self.re = re
         with open(env_path, "r") as file:
             api_key = file.read().strip()
-        self.client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=api_key)
+        self.client = OpenAI(api_key=api_key)
         os.environ["OPENAI_API_KEY"] = api_key
         self.history_path = history_path
         self.action_handler = ActionHandler(history_path)
@@ -27,7 +28,7 @@ class ChatBot:
             history = file.readlines()
         response_chunks = []
         stream = self.client.chat.completions.create(
-            model="openai/gpt-oss-120b:free",
+            model="gpt-4o",
             messages=[
                 {"role": "system", "content": f'''
                 The current time is {self.datetime.now().strftime("%H:%M:%S")}.
